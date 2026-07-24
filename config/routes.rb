@@ -14,4 +14,12 @@ Rails.application.routes.draw do
 
   # Meme 
   post "memes", to: "memes#create"
+
+  # Captions
+  post "captions/instagram",  to: "instagram_captions#create"
+  post "captions/instagrams", to: "instagram_captions#create"
+  get  "captions/instagram",  to: "instagram_captions#index"
+  get  "captions/instagrams", to: "instagram_captions#index"
+
+  resources :captions, only: %i[index show create destroy]
 end
