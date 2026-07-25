@@ -8,13 +8,6 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  # Auth
-  post "signup", to: "users#signup"
-  post "login", to: "users#login"
-
-  # Meme 
-  post "memes", to: "memes#create"
-
   # Captions
   post "captions/instagram",  to: "instagram_captions#create"
   post "captions/instagrams", to: "instagram_captions#create"
