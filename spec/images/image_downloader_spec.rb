@@ -1,10 +1,16 @@
 require "rails_helper"
+require "tmpdir"
+require "webmock/rspec"
 
 RSpec.describe ImageDownloader do
-  let(:dir) { Dir.mktmpdir }
-  subject(:downloader) { described_class.new(dir: dir) }
+  around do |example|
+    Dir.mktmpdir do |temp_dir|
+      @dir = temp_dir
+      example.run
+    end
+  end
 
-  after { FileUtils.remove_entry(dir) if File.directory?(dir) }
+  subject(:downloader) { described_class.new(dir: @dir) }
 
   it "downloads the remote body to <dir>/<filename> and returns the path" do
     stub_request(:get, "http://example.com/a.jpg")
@@ -12,12 +18,13 @@ RSpec.describe ImageDownloader do
 
     path = downloader.download(url: "http://example.com/a.jpg", filename: "out.jpg")
 
-    expect(path).to eq(File.join(dir, "out.jpg"))
+    expect(path).to eq(File.join(@dir, "out.jpg"))
     expect(File.read(path)).to eq("IMG-BYTES")
   end
 
   it "raises DownloadError on an HTTP error" do
-    stub_request(:get, "http://example.com/missing.jpg").to_return(status: 404)
+    stub_request(:get, "http://example.com/missing.jpg")
+      .to_return(status: 404)
 
     expect {
       downloader.download(url: "http://example.com/missing.jpg", filename: "x.jpg")

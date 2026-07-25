@@ -5,5 +5,5 @@ class InstagramCaption < ApplicationRecord
 
   validates :text, presence: true
   validates :type_name, presence: true, inclusion: { in: TYPES }
-  validates :caption_url, presence: true
+  validates :url, presence: true
 end

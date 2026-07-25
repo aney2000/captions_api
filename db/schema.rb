@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_16_044645) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_25_110454) do
+  create_table "captions", force: :cascade do |t|
+    t.string "caption_url"
+    t.datetime "created_at", null: false
+    t.string "text", null: false
+    t.datetime "updated_at", null: false
+    t.string "url", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "password_digest", null: false
