@@ -1,4 +1,6 @@
 class CreateCaption
+  include ParameterValidation
+
   def initialize(store: ImageStore.new,
                  namer: UniqueNameGenerator.new,
                  downloader: nil,
@@ -31,33 +33,10 @@ class CreateCaption
   private
 
   def first_invalid(url:, text:)
-    return validation_failure("url", url) unless url.valid?
-    return validation_failure("text", text) unless text.valid?
+    return failure_for("url", url) unless url.valid?
+    return failure_for("text", text) unless text.valid?
 
     nil
-  end
-
-  # Missing (nil param) -> 400; present-but-invalid value -> 422 (captions.md).
-  def validation_failure(param, vo)
-    if vo.error == :missing
-      ServiceResult.failure(error: ApiError.missing_parameter(param), status: 400)
-    else
-      ServiceResult.failure(
-        error: ApiError.invalid_parameter(param, reason_for(vo.error)),
-        status: 422
-      )
-    end
-  end
-
-  def reason_for(error)
-    {
-      blank: "must not be empty",
-      too_long: "is too long",
-      not_http: "must be an http(s) URL",
-      malformed: "is malformed",
-      unsupported_extension: "must be a jpg, jpeg or png image",
-      invalid_type: "has an invalid type"
-    }.fetch(error, "is invalid")
   end
 
   def serialize(caption)

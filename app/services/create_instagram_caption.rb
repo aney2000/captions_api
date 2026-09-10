@@ -1,4 +1,6 @@
 class CreateInstagramCaption
+  include ParameterValidation
+
   WIDTH = 1080
   HEIGHT = 1080
 
@@ -102,30 +104,6 @@ class CreateInstagramCaption
       error: ApiError.invalid_parameter("filter", "is only allowed when type is image"),
       status: 422
     )
-  end
-
-  def failure_for(param, value_object)
-    if value_object.error == :missing
-      ServiceResult.failure(error: ApiError.missing_parameter(param), status: 400)
-    else
-      ServiceResult.failure(
-        error: ApiError.invalid_parameter(param, reason_for(value_object.error)),
-        status: 422
-      )
-    end
-  end
-
-  def reason_for(error)
-    {
-      blank: "must not be empty",
-      empty: "must not be empty",
-      too_long: "is too long",
-      not_http: "must be an http(s) URL",
-      malformed: "is malformed",
-      unsupported: "is not supported",
-      unsupported_extension: "must be a jpg, jpeg or png image",
-      invalid_type: "has an invalid type"
-    }.fetch(error, "is invalid")
   end
 
   def serialize(caption, filter_vo)
