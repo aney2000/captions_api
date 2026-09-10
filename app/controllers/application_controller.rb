@@ -6,4 +6,12 @@ class ApplicationController < ActionController::API
       render json: result.error, status: result.status
     end
   end
+
+  private
+
+  # An image store whose public URLs are built from the current request host,
+  # so generated caption_urls point back at this running server.
+  def image_store
+    ImageStore.new(host: request.base_url)
+  end
 end

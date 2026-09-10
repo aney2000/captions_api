@@ -13,7 +13,7 @@ class CaptionsController < ApplicationController
 
   def create
     attrs = caption_params
-    result = CreateCaption.new.call(url: attrs[:url], text: attrs[:text])
+    result = CreateCaption.new(store: image_store).call(url: attrs[:url], text: attrs[:text])
     if result.success?
       render json: { caption: result.payload }, status: 201
     else

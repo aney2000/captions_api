@@ -32,6 +32,12 @@ RSpec.describe "Captions", type: :request do
       expect(response.parsed_body["caption"]["caption_url"]).to be_present
     end
 
+    it "builds caption_url from the request host" do
+      post "/captions", params: { caption: { url: "http://example.com/a.jpg", text: "hi" } }, as: :json
+
+      expect(response.parsed_body["caption"]["caption_url"]).to start_with("http://www.example.com/images/")
+    end
+
     it "returns 400 when url is missing" do
       post "/captions", params: { caption: { text: "hi" } }, as: :json
       expect(response).to have_http_status(400)

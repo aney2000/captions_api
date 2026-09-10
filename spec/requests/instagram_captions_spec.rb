@@ -20,7 +20,7 @@ RSpec.describe "Instagram Captions", type: :request do
 
       expect(response).to have_http_status(303)
       caption_url = response.parsed_body["caption"]["caption_url"]
-      expect(caption_url).to be_present
+      expect(caption_url).to start_with("http://www.example.com/images/")
       expect(response.headers["Location"]).to eq(caption_url)
       expect(response.parsed_body["caption"]["type"]).to eq("image")
     end

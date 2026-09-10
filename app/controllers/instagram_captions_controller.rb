@@ -5,7 +5,7 @@ class InstagramCaptionsController < ApplicationController
   end
 
   def create
-    result = CreateInstagramCaption.new.call(**instagram_params)
+    result = CreateInstagramCaption.new(store: image_store).call(**instagram_params)
     if result.success?
       response.set_header("Location", result.payload[:caption_url])
       render json: { caption: result.payload }, status: result.status
