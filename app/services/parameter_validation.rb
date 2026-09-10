@@ -15,6 +15,14 @@ module ParameterValidation
 
   private
 
+  # Returns a failure ServiceResult when the value object is invalid, else nil,
+  # so validations can be composed with `||` into a readable guard chain.
+  def validation_error(param, value_object)
+    return nil if value_object.valid?
+
+    failure_for(param, value_object)
+  end
+
   def failure_for(param, value_object)
     if value_object.error == :missing
       ServiceResult.failure(error: ApiError.missing_parameter(param), status: 400)

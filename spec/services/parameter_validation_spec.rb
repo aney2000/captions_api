@@ -9,6 +9,10 @@ RSpec.describe ParameterValidation do
       def failure(param, value_object)
         failure_for(param, value_object)
       end
+
+      def error(param, value_object)
+        validation_error(param, value_object)
+      end
     end.new
   end
 
@@ -31,5 +35,18 @@ RSpec.describe ParameterValidation do
     result = host.failure("url", double(error: :something_else))
 
     expect(result.error[:description]).to include("is invalid")
+  end
+
+  describe "#validation_error" do
+    it "returns nil for a valid value object" do
+      expect(host.error("url", double(valid?: true))).to be_nil
+    end
+
+    it "returns a failure for an invalid value object" do
+      result = host.error("url", double(valid?: false, error: :blank))
+
+      expect(result.status).to eq(422)
+      expect(result.error[:code]).to eq("invalid_parameter")
+    end
   end
 end

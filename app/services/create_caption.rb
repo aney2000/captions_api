@@ -33,10 +33,7 @@ class CreateCaption
   private
 
   def first_invalid(url:, text:)
-    return failure_for("url", url) unless url.valid?
-    return failure_for("text", text) unless text.valid?
-
-    nil
+    validation_error("url", url) || validation_error("text", text)
   end
 
   def serialize(caption)

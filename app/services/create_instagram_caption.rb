@@ -73,30 +73,27 @@ class CreateInstagramCaption
   end
 
   def validate(type_vo, text_vo, filter_vo, attrs)
-    return failure_for("type", type_vo) unless type_vo.valid?
-    return failure_for("text", text_vo) unless text_vo.valid?
-    return failure_for("filter", filter_vo) unless filter_vo.valid?
-    return filters_not_allowed if filter_vo.present? && !type_vo.image?
+    validation_error("type", type_vo) ||
+      validation_error("text", text_vo) ||
+      validation_error("filter", filter_vo) ||
+      filters_guard(filter_vo, type_vo) ||
+      validate_background(type_vo, attrs)
+  end
 
-    validate_background(type_vo, attrs)
+  def filters_guard(filter_vo, type_vo)
+    filters_not_allowed if filter_vo.present? && !type_vo.image?
   end
 
   def validate_background(type_vo, attrs)
-    return failure_for("url", ImageUrl.new(attrs[:url])) if type_vo.image? && !ImageUrl.new(attrs[:url]).valid?
-    return failure_for("color", HexColor.new(attrs[:color])) if type_vo.color? && !HexColor.new(attrs[:color]).valid?
-    return nil unless type_vo.gradient?
+    return validation_error("url", ImageUrl.new(attrs[:url])) if type_vo.image?
+    return validation_error("color", HexColor.new(attrs[:color])) if type_vo.color?
 
     validate_gradient(attrs)
   end
 
   def validate_gradient(attrs)
-    start_vo = HexColor.new(attrs[:start_color])
-    return failure_for("start_color", start_vo) unless start_vo.valid?
-
-    end_vo = HexColor.new(attrs[:end_color])
-    return failure_for("end_color", end_vo) unless end_vo.valid?
-
-    nil
+    validation_error("start_color", HexColor.new(attrs[:start_color])) ||
+      validation_error("end_color", HexColor.new(attrs[:end_color]))
   end
 
   def filters_not_allowed
