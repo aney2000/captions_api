@@ -38,7 +38,7 @@ class CaptionsController < ApplicationController
       id: caption.id,
       url: caption.url,
       text: caption.text,
-      caption_url: caption.url
+      caption_url: caption.caption_url
     }
   end
 end

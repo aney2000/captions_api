@@ -52,6 +52,15 @@ RSpec.describe "Captions", type: :request do
       expect(response.parsed_body["caption"]["id"]).to eq(caption.id)
     end
 
+    it "returns the stored caption_url, not the original url" do
+      caption = create(:caption, url: "http://example.com/a.jpg",
+                                 caption_url: "http://localhost/images/generated.jpg")
+      get "/captions/#{caption.id}"
+
+      expect(response.parsed_body["caption"]["url"]).to eq("http://example.com/a.jpg")
+      expect(response.parsed_body["caption"]["caption_url"]).to eq("http://localhost/images/generated.jpg")
+    end
+
     it "returns 404 when not found" do
       get "/captions/999999"
       expect(response).to have_http_status(404)
