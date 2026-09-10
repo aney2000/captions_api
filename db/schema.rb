@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_26_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_26_110000) do
   create_table "captions", force: :cascade do |t|
     t.string "caption_url"
     t.datetime "created_at", null: false
@@ -27,15 +27,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_26_100000) do
     t.string "type_name", null: false
     t.datetime "updated_at", null: false
     t.string "url"
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.string "password_digest", null: false
-    t.string "token", null: false
-    t.datetime "updated_at", null: false
-    t.string "username", null: false
-    t.index ["token"], name: "index_users_on_token", unique: true
-    t.index ["username"], name: "index_users_on_username", unique: true
   end
 end
