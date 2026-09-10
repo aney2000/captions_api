@@ -20,12 +20,4 @@ RSpec.describe ApiError do
     expect(err[:description]).to include("Caption")
     expect(err[:description]).to include("7")
   end
-
-  it "builds an unauthorized error" do
-    expect(described_class.unauthorized[:code]).to eq("unauthorized")
-  end
-
-  it "builds a conflict error" do
-    expect(described_class.conflict("User")[:code]).to eq("conflict")
-  end
 end

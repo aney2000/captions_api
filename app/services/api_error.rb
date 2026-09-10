@@ -25,20 +25,4 @@ module ApiError
       description: "#{resource} with id #{id} could not be found"
     }
   end
-
-  def unauthorized
-    {
-      code: "unauthorized",
-      title: "Authentication required",
-      description: "A valid Authorization bearer token is required for this request"
-    }
-  end
-
-  def conflict(resource)
-    {
-      code: "conflict",
-      title: "Resource already exists",
-      description: "#{resource} already exists"
-    }
-  end
 end
