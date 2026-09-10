@@ -7,4 +7,10 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  # Captions
+  post "captions/instagram",  to: "instagram_captions#create"
+  get  "captions/instagrams", to: "instagram_captions#index"
+
+  resources :captions, only: %i[index show create destroy]
 end
