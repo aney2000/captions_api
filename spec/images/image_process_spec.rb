@@ -17,4 +17,15 @@ RSpec.describe ImageProcessor do
       expect(result).to eq("/tmp/a.jpg")
     end
   end
+
+  describe "#resize" do
+    it "opens the path, resizes to the exact dimensions, writes back, and returns the path" do
+      result = processor.resize(path: "/tmp/a.jpg", width: 1080, height: 1350)
+
+      expect(image_class).to have_received(:open).with("/tmp/a.jpg")
+      expect(fake_image).to have_received(:resize).with("1080x1350!")
+      expect(fake_image).to have_received(:write).with("/tmp/a.jpg")
+      expect(result).to eq("/tmp/a.jpg")
+    end
+  end
 end
