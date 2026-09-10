@@ -14,7 +14,7 @@ RSpec.describe ImageDownloader do
 
   it "downloads the remote body to <dir>/<filename> and returns the path" do
     stub_request(:get, "http://example.com/a.jpg")
-      .to_return(status: 200, body: "IMG-BYTES")
+      .to_return(status: 200, body: "IMG-BYTES", headers: { "Content-Type" => "image/jpeg" })
 
     path = downloader.download(url: "http://example.com/a.jpg", filename: "out.jpg")
 
@@ -28,6 +28,15 @@ RSpec.describe ImageDownloader do
 
     expect {
       downloader.download(url: "http://example.com/missing.jpg", filename: "x.jpg")
+    }.to raise_error(ImageDownloader::DownloadError)
+  end
+
+  it "raises DownloadError when the response is not a supported image type" do
+    stub_request(:get, "http://example.com/page.jpg")
+      .to_return(status: 200, body: "<html></html>", headers: { "Content-Type" => "text/html" })
+
+    expect {
+      downloader.download(url: "http://example.com/page.jpg", filename: "x.jpg")
     }.to raise_error(ImageDownloader::DownloadError)
   end
 end

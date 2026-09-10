@@ -62,4 +62,14 @@ RSpec.describe CreateCaption do
     service.call(url: nil, text: nil)
     expect(Caption.count).to eq(0)
   end
+
+  it "returns 422 when the image cannot be downloaded" do
+    allow(downloader).to receive(:download).and_raise(ImageDownloader::DownloadError, "boom")
+
+    result = service.call(url: "http://example.com/a.jpg", text: "hi")
+
+    expect(result.status).to eq(422)
+    expect(result.error[:code]).to eq("invalid_parameter")
+    expect(Caption.count).to eq(0)
+  end
 end

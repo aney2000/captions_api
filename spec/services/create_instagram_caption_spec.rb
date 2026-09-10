@@ -127,5 +127,16 @@ RSpec.describe CreateInstagramCaption do
       service.call(type: nil, text: nil)
       expect(InstagramCaption.count).to eq(0)
     end
+
+    it "returns 422 when the image background cannot be downloaded" do
+      allow(catalog).to receive(:for_type).and_return(source)
+      allow(source).to receive(:build).and_raise(ImageDownloader::DownloadError, "boom")
+
+      result = service.call(type: "image", url: "http://example.com/a.jpg", text: "hi")
+
+      expect(result.status).to eq(422)
+      expect(result.error[:code]).to eq("invalid_parameter")
+      expect(InstagramCaption.count).to eq(0)
+    end
   end
 end

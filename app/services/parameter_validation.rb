@@ -37,4 +37,12 @@ module ParameterValidation
   def reason_for(error)
     REASONS.fetch(error, "is invalid")
   end
+
+  # Failure for a url whose image could not be fetched/validated at download time.
+  def download_failure(param)
+    ServiceResult.failure(
+      error: ApiError.invalid_parameter(param, "could not be downloaded as a supported image"),
+      status: 422
+    )
+  end
 end

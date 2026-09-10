@@ -28,6 +28,8 @@ class CreateInstagramCaption
     return invalid if invalid
 
     generate(type_vo, text_vo, filter_vo, attrs)
+  rescue ImageDownloader::DownloadError
+    download_failure("url")
   end
 
   private

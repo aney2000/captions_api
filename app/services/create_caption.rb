@@ -20,6 +20,14 @@ class CreateCaption
     invalid = first_invalid(url: url_vo, text: text_vo)
     return invalid if invalid
 
+    generate(url: url, text: text)
+  rescue ImageDownloader::DownloadError
+    download_failure("url")
+  end
+
+  private
+
+  def generate(url:, text:)
     filename = @namer.generate(url: url, text: text)
     local_path = @downloader.download(url: url, filename: filename)
     @processor.add_text(path: local_path, text: text)
@@ -29,8 +37,6 @@ class CreateCaption
     )
     ServiceResult.success(payload: serialize(caption), status: 201)
   end
-
-  private
 
   def first_invalid(url:, text:)
     validation_error("url", url) || validation_error("text", text)
